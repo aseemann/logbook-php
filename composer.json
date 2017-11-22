@@ -1,0 +1,20 @@
+{
+    "name": "axel-kummer/logbook-php",
+    "description": "PSR compatible logger to send logs from php applications to the logbook server and client.",
+    "type": "library",
+    "require": {
+        "guzzle/http": "^3.9",
+        "psr/log": "^1.0"
+    },
+    "license": "GPLv3",
+    "authors": [
+        {
+            "name": "Axel Kummer",
+            "email": "kummeraxel@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require-dev": {
+        "phpunit/phpunit": "^6.4"
+    }
+}
