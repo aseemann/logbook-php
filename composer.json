@@ -21,6 +21,6 @@
         "psr-4" : {"AxelKummer\\LogBook\\":"src/"}
     },
     "autoload-dev" : {
-        "psr-4" : {"AxelKummer\\LogBook\\Tests":"tests/"}
+        "psr-4" : {"AxelKummer\\LogBook\\Tests\\":"tests/"}
     }
 }
