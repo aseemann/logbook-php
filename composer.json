@@ -3,8 +3,8 @@
     "description": "PSR compatible logger to send logs from php applications to the logbook server and client.",
     "type": "library",
     "require": {
-        "guzzle/http": "^3.9",
-        "psr/log": "^1.0"
+        "psr/log": "^1.0",
+        "guzzlehttp/guzzle": "^6.3"
     },
     "license": "GPLv3",
     "authors": [
