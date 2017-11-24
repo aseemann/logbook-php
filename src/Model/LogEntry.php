@@ -17,60 +17,66 @@ class LogEntry
      *
      * @var string
      */
-    private $logName;
+    private $loggerName;
 
     /**
      * LogLevel
      *
      * @var string
      */
-    private $logLevel;
+    private $severity;
 
     /**
      * LogMessage
      *
      * @var string
      */
-    private $logMessage;
+    private $message;
 
     /**
      * LogContext
      *
      * @var array
      */
-    private $logContext;
+    private $context;
+
+    /**
+     * @var string
+     */
+    private $time;
 
     /**
      * LogEntry constructor.
      *
-     * @param $logLevel
-     * @param $logMessage
-     * @param $logContext
+     * @param $severity
+     * @param $message
+     * @param $context
      */
-    public function __construct($logName, $logLevel, $logMessage, array $logContext = [])
+    public function __construct($loggerName, $severity, $message, array $context = [])
     {
-        $this->setLogName($logName)
-            ->setLogLevel($logLevel)
-            ->setLogMessage($logMessage)
-            ->setLogContext($logContext);
+        $this->setLoggerName($loggerName)
+            ->setSeverity($severity)
+            ->setMessage($message)
+            ->setContext($context)
+            ->setTime(time());
     }
 
     /**
      * @return string
      */
-    public function getLogName() : string
+    public function getLoggerName()
     {
-        return $this->logName;
+        return $this->loggerName;
     }
 
     /**
-     * @param string $logName
+     * @param string $loggerName
      *
      * @return $this
      */
-    public function setLogName(string $logName) : LogEntry
+    public function setLoggerName($loggerName)
     {
-        $this->logName = str_replace('\\', '.', $logName);
+        $this->loggerName = str_replace('\\', '.', $loggerName);
 
         return $this;
     }
@@ -78,19 +84,19 @@ class LogEntry
     /**
      * @return string
      */
-    public function getLogLevel() : string
+    public function getSeverity()
     {
-        return $this->logLevel;
+        return $this->severity;
     }
 
     /**
-     * @param string $logLevel
+     * @param string $severity
      *
      * @return $this
      */
-    public function setLogLevel(string $logLevel)
+    public function setSeverity($severity)
     {
-        $this->logLevel = $logLevel;
+        $this->severity = $severity;
 
         return $this;
     }
@@ -98,19 +104,19 @@ class LogEntry
     /**
      * @return string
      */
-    public function getLogMessage() : string
+    public function getMessage()
     {
-        return $this->logMessage;
+        return $this->message;
     }
 
     /**
-     * @param string $logMessage
+     * @param string $message
      *
      * @return $this
      */
-    public function setLogMessage(string $logMessage)
+    public function setMessage($message)
     {
-        $this->logMessage = $logMessage;
+        $this->message = $message;
 
         return $this;
     }
@@ -118,19 +124,39 @@ class LogEntry
     /**
      * @return array
      */
-    public function getLogContext() : array
+    public function getContext()
     {
-        return $this->logContext;
+        return $this->context;
     }
 
     /**
-     * @param array $logContext
+     * @param array $context
      *
      * @return $this
      */
-    public function setLogContext(array $logContext)
+    public function setContext(array $context = [])
     {
-        $this->logContext = $logContext;
+        $this->context = $context;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTime()
+    {
+        return $this->time;
+    }
+
+    /**
+     * @param string $time
+     *
+     * @return LogEntry
+     */
+    public function setTime($time)
+    {
+        $this->time = $time;
 
         return $this;
     }
@@ -143,9 +169,10 @@ class LogEntry
     public function __toString()
     {
         $logEntry = [];
-        foreach ($this as $property => $value) {
-            $logEntry[$property] = $value;
-        }
+        $logEntry['time'] = $this->getTime();
+        $logEntry['message'] = $this->getMessage();
+        $logEntry['severity'] = $this->getSeverity();
+        $logEntry['context'] = $this->getContext();
 
         return json_encode($logEntry);
     }

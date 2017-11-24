@@ -26,12 +26,12 @@ class LogEntryTest extends TestCase
             $context = ["debug" => ['test' => 1, "test2" => 2]]
         );
 
-        $this->assertSame('AxelKummer.LogBook.Tests.Model.LogEntryTest', $logEntry->getLogName());
-        $this->assertSame(LogLevel::NOTICE, $logEntry->getLogLevel());
-        $this->assertSame("LogEntry Test", $logEntry->getLogMessage());
-        $this->assertSame($context, $logEntry->getLogContext());
+        $this->assertSame('AxelKummer.LogBook.Tests.Model.LogEntryTest', $logEntry->getLoggerName());
+        $this->assertSame(LogLevel::NOTICE, $logEntry->getSeverity());
+        $this->assertSame("LogEntry Test", $logEntry->getMessage());
+        $this->assertSame($context, $logEntry->getContext());
 
-        $strExpected = "{\"logName\":\"AxelKummer.LogBook.Tests.Model.LogEntryTest\",\"logLevel\":\"notice\",\"logMessage\":\"LogEntry Test\",\"logContext\":{\"debug\":{\"test\":1,\"test2\":2}}}";
+        $strExpected = "{\"time\":".time().",\"message\":\"LogEntry Test\",\"severity\":\"notice\",\"context\":{\"debug\":{\"test\":1,\"test2\":2}}}";
         $strCurrent  = (string) $logEntry;
 
         $this->assertSame($strExpected, $strCurrent);

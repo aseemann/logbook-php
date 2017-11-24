@@ -2,6 +2,7 @@
 
 namespace AxelKummer\LogBook;
 
+use AxelKummer\LogBook\Request\AbstractRequest;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 
@@ -16,14 +17,20 @@ use Psr\Log\LogLevel;
  */
 class Logger implements LoggerInterface
 {
+    /**
+     * Name of the logger.
+     *
+     * @var string
+     */
     private $loggerName;
 
     /**
      * Logger constructor.
      *
-     * @param string $name Name of the logger should have (e.g. the class name)
+     * @param string          $name    Name of the logger should have (e.g. the class name)
+     * @param AbstractRequest $request Request object
      */
-    public function __construct($name)
+    public function __construct($name, AbstractRequest $request)
     {
         $this->loggerName = $name;
     }

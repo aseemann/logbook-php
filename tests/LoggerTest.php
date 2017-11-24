@@ -3,6 +3,7 @@
 namespace AxelKummer\LogBook\Tests;
 
 use AxelKummer\LogBook\Logger;
+use AxelKummer\LogBook\Request\AbstractRequest;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LogLevel;
 
@@ -21,45 +22,50 @@ class LoggerTest extends TestCase
     {
         $testMessage = "Test log message";
 
+        $request = $this->getMockForAbstractClass(
+            AbstractRequest::class,
+            ['APP','localcost']
+        );
+
         /**
          * @var \PHPUnit_Framework_MockObject_MockObject|Logger $logger
          */
         $logger = $this->getMockBuilder(Logger::class)
-            ->setConstructorArgs([__CLASS__])
+            ->setConstructorArgs([[__CLASS__], $request])
             ->setMethods(['log'])
             ->getMock();
 
         $logger->expects($this->at(0))
             ->method('log')
-            ->with(LogLevel::EMERGENCY, $testMessage, []);
+            ->with(LogLevel::EMERGENCY, $testMessage);
 
         $logger->expects($this->at(1))
                ->method('log')
-               ->with(LogLevel::ALERT, $testMessage, []);
+               ->with(LogLevel::ALERT, $testMessage);
 
         $logger->expects($this->at(2))
                ->method('log')
-               ->with(LogLevel::CRITICAL, $testMessage, []);
+               ->with(LogLevel::CRITICAL, $testMessage);
 
         $logger->expects($this->at(3))
                ->method('log')
-               ->with(LogLevel::ERROR, $testMessage, []);
+               ->with(LogLevel::ERROR, $testMessage);
 
         $logger->expects($this->at(4))
                ->method('log')
-               ->with(LogLevel::WARNING, $testMessage, []);
+               ->with(LogLevel::WARNING, $testMessage);
 
         $logger->expects($this->at(5))
                ->method('log')
-               ->with(LogLevel::NOTICE, $testMessage, []);
+               ->with(LogLevel::NOTICE, $testMessage);
 
         $logger->expects($this->at(6))
                ->method('log')
-               ->with(LogLevel::INFO, $testMessage, []);
+               ->with(LogLevel::INFO, $testMessage);
 
         $logger->expects($this->at(7))
                ->method('log')
-               ->with(LogLevel::DEBUG, $testMessage, []);
+               ->with(LogLevel::DEBUG, $testMessage);
 
         $logger->emergency($testMessage);
         $logger->alert($testMessage);
