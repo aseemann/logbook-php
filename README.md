@@ -24,5 +24,25 @@ get the dependencies installed which are necessary.
 ```
 ## Usage
 
+Basic usage as follow.
+
+```php
+//Make a request insatnce
+$request = \AxelKummer\LogBook\LoggerUtility::makeRequestInsatnce(
+    \AxelKummer\LogBook\Request\HttpRequest::class,
+    'MyApplication',
+    'myhost'
+    8080
+);
+
+//get a logger with assigned request instance
+$logger = \AxelKummer\LogBook\LoggerUtility::getLogger('MyLogger', $request);
+
+//Use the logger to send messages to the logbook server
+$logger->info('My info mesage');
+```
+
+You can implement an use your own request class. Your Class have to extend ``\AxelKummer\LogBook\Request\AbstractRequest``
+and implements the methods ``sendLog`` and ``getUrl``
 
 
