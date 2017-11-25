@@ -39,7 +39,7 @@ class LoggerUtility
      * @return AbstractRequest
      * @throws Exception
      */
-    public function makeRequestInstance($className, $appIdentifier, $host, $port)
+    public static function makeRequestInstance($className, $appIdentifier, $host, $port = null)
     {
         $hash = md5($className.$appIdentifier.$host.$port);
 
@@ -47,13 +47,14 @@ class LoggerUtility
             return self::$requestInstances[$hash];
         }
 
-        if (class_parents($className) === AbstractRequest::class) {
+        self::$requestInstances[$hash] = new $className($appIdentifier, $host, $port);
+
+        if (false === self::$requestInstances[$hash] instanceof AbstractRequest) {
+            unset(self::$requestInstances[$hash]);
             throw new Exception(
                 'The request object have to extend : ' . AbstractRequest::class
             );
         }
-
-        self::$requestInstances[$hash] = new $className($appIdentifier, $host, $port);
 
         return self::$requestInstances[$hash];
     }
@@ -66,7 +67,7 @@ class LoggerUtility
      *
      * @return Logger
      */
-    public function getLogger($name, AbstractRequest $request)
+    public static function getLogger($name, AbstractRequest $request)
     {
         if (array_key_exists($name, self::$logger)) {
             return self::$logger[$name];

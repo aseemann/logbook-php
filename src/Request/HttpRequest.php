@@ -18,6 +18,14 @@ use GuzzleHttp\RequestOptions;
 class HttpRequest extends AbstractRequest
 {
     /**
+     * Header constants
+     */
+    const HEADER_PREFIX         = "LogBook-";
+    const HEADER_LOGGER_NAME    = self::HEADER_PREFIX . "Logger-Name";
+    const HEADER_APP_IDENTIFIER = self::HEADER_PREFIX . "App-Identifier";
+    const HEADER_REQUEST_URI    = self::HEADER_PREFIX . "Request-Uri";
+
+    /**
      * Send a given logentry to the
      *
      * @param LogEntry $logEntry
@@ -35,10 +43,10 @@ class HttpRequest extends AbstractRequest
         $client->postAsync(
             $this->getUrl(),
             [
-                RequestOptions::TIMEOUT => 1,
+                RequestOptions::TIMEOUT         => 1,
                 RequestOptions::ALLOW_REDIRECTS => false,
-                RequestOptions::HEADERS => $this->getHeaders($logEntry),
-                RequestOptions::JSON => (string) $logEntry
+                RequestOptions::HEADERS         => $this->getHeaders($logEntry),
+                RequestOptions::JSON            => (string) $logEntry,
             ]
         );
     }
@@ -53,9 +61,9 @@ class HttpRequest extends AbstractRequest
     private function getHeaders(LogEntry $logEntry)
     {
         return [
-            'LogBook-Logger-Name'    => $logEntry->getLoggerName(),
-            'LogBook-Request-Uri'    => filter_var($_SERVER['REQUEST_URI'], FILTER_SANITIZE_URL),
-            'LogBook-App-Identifier' => $this->appIdentifier
+            self::HEADER_LOGGER_NAME    => $logEntry->getLoggerName(),
+            self::HEADER_REQUEST_URI    => filter_var($_SERVER['REQUEST_URI'], FILTER_SANITIZE_URL),
+            self::HEADER_APP_IDENTIFIER => $this->appIdentifier,
         ];
     }
 
