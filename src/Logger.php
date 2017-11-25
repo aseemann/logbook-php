@@ -2,6 +2,7 @@
 
 namespace AxelKummer\LogBook;
 
+use AxelKummer\LogBook\Model\LogEntry;
 use AxelKummer\LogBook\Request\AbstractRequest;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
@@ -25,6 +26,13 @@ class Logger implements LoggerInterface
     private $loggerName;
 
     /**
+     * Request object
+     *
+     * @var AbstractRequest
+     */
+    private $request;
+
+    /**
      * Logger constructor.
      *
      * @param string          $name    Name of the logger should have (e.g. the class name)
@@ -33,6 +41,7 @@ class Logger implements LoggerInterface
     public function __construct($name, AbstractRequest $request)
     {
         $this->loggerName = $name;
+        $this->request = $request;
     }
 
     /**
@@ -161,6 +170,8 @@ class Logger implements LoggerInterface
      */
     public function log($level, $message, array $context = [])
     {
-        //todo implement map log data to logenty and send to logbook server
+        $logEntry = new LogEntry($this->loggerName, $level, $message, $context);
+
+        $this->request->sendLog($logEntry);
     }
 }

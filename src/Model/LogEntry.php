@@ -136,6 +136,10 @@ class LogEntry
      */
     public function setContext(array $context = [])
     {
+        foreach ($context as $key => $data) {
+            $context[$key] = $this->analyseContext($data);
+        }
+
         $this->context = $context;
 
         return $this;
@@ -175,5 +179,34 @@ class LogEntry
         $logEntry['context'] = $this->getContext();
 
         return json_encode($logEntry);
+    }
+
+    /**
+     * Analyse context to get private and variables of debugged object
+     *
+     * @param mixed $context
+     *
+     * @return array
+     */
+    private function analyseContext($context)
+    {
+        if (is_object($context)) {
+            $className = get_class($context);
+            $obj = ['objectType' => $className];
+
+            if ($className === "stdClass") {
+                return $obj += (array) $context;
+            }
+
+            $reflection = new \ReflectionClass($className);
+            foreach ($reflection->getProperties() as $property) {
+                $property->setAccessible(true);
+                $obj[$property->getName()] = $this->analyseContext($property->getValue($context));
+            }
+
+            return $obj;
+        }
+
+        return $context;
     }
 }

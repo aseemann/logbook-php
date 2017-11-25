@@ -15,7 +15,8 @@ use GuzzleHttp\RequestOptions;
  * @license  https://www.gnu.org/licenses/gpl-3.0.en.html GPLv3
  * @link     https://github.com/axel-kummer/logbook-php
  */
-class HttpRequest extends AbstractRequest
+class HttpRequest
+    extends AbstractRequest
 {
     /**
      * Header constants
@@ -30,25 +31,31 @@ class HttpRequest extends AbstractRequest
      *
      * @param LogEntry $logEntry
      *
-     * @return void
+     * @return bool
      */
     public function sendLog(LogEntry $logEntry)
     {
         if (false === $this->hasCookie()) {
-            return;
+            return false;
         }
 
         $client = new Client();
+        try {
+            $client->request(
+                'POST',
+                $this->getUrl(),
+                [
+                    RequestOptions::TIMEOUT         => 0.01,
+                    RequestOptions::ALLOW_REDIRECTS => false,
+                    RequestOptions::HEADERS         => $this->getHeaders($logEntry),
+                    RequestOptions::BODY            => (string) $logEntry,
+                ]
+            );
+        } catch (\Exception $exception) {
+        }
+        unset($client);
 
-        $client->postAsync(
-            $this->getUrl(),
-            [
-                RequestOptions::TIMEOUT         => 1,
-                RequestOptions::ALLOW_REDIRECTS => false,
-                RequestOptions::HEADERS         => $this->getHeaders($logEntry),
-                RequestOptions::JSON            => (string) $logEntry,
-            ]
-        );
+        return true;
     }
 
     /**
@@ -61,6 +68,7 @@ class HttpRequest extends AbstractRequest
     private function getHeaders(LogEntry $logEntry)
     {
         return [
+            "Content-Type"              => "application/json",
             self::HEADER_LOGGER_NAME    => $logEntry->getLoggerName(),
             self::HEADER_REQUEST_URI    => filter_var($_SERVER['REQUEST_URI'], FILTER_SANITIZE_URL),
             self::HEADER_APP_IDENTIFIER => $this->appIdentifier,
@@ -74,6 +82,11 @@ class HttpRequest extends AbstractRequest
      */
     public function getUrl()
     {
-        return "http://$this->host" . ($this->port ? ":$this->port" : "") . '/logbook/' .$this->getLogBookId() . '/logs';
+        if (false === $this->hasCookie()) {
+            return "";
+        }
+
+        return "http://$this->host" . ($this->port ? ":$this->port" : "") . '/logbook/' . $this->getLogBookId()
+               . '/logs';
     }
 }

@@ -4,7 +4,7 @@ namespace AxelKummer\LogBook\Tests\Stub;
 
 
 /**
- * Class Request
+ * Class Request. Request stub
  *
  * @category Library
  * @package  axel-kummer/logbook-php

@@ -62,15 +62,11 @@ abstract class AbstractRequest
     /**
      * Returns the cookie data
      *
-     * @return array
+     * @return string
      */
     protected function getLogBookId()
     {
-        if (false === $this->hasCookie()) {
-            return [];
-        }
-
-        return $_COOKIE[self::COOKIE_NAME];
+        return (string) $_COOKIE[self::COOKIE_NAME];
     }
 
     /**
@@ -78,7 +74,7 @@ abstract class AbstractRequest
      *
      * @param LogEntry $logEntry LogEntry to ship
      *
-     * @return void
+     * @return bool
      */
     abstract public function sendLog(LogEntry $logEntry);
 

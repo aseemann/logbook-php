@@ -20,30 +20,26 @@ use Psr\Log\LogLevel;
  */
 class HttpRequestTest extends TestCase
 {
-    private $hostName = "localhost";
-    private $port     = 58000;
-    private $output   = "";
-
-    public function setUp()
-    {
-        $path = realpath(__DIR__ . '/../stub/server');
-
-        //$this->output = shell_exec("php -S {$this->hostName}:{$this->port} -t $path");
-
-        parent::setUp();
-    }
-
+    /**
+     * Test send http request
+     *
+     * @return void
+     */
     public function testSendLog()
     {
-        $request = LoggerUtility::makeRequestInstance(HttpRequest::class, "Test", $this->hostName, $this->port);
+        $request = LoggerUtility::makeRequestInstance(HttpRequest::class, "Test", 'localhost', 9999);
 
         $entry = new LogEntry('TestLogger',LogLevel::INFO,'Test log entry',['array' => 1]);
 
-        $request->sendLog($entry);
+        $this->assertEmpty($request->getUrl());
+        $this->assertFalse($request->sendLog($entry));
 
         $_COOKIE[AbstractRequest::COOKIE_NAME] = "1234";
+
         $_SERVER['REQUEST_URI'] = "test.html";
 
-        $request->sendLog($entry);
+        $this->assertSame('http://localhost:9999/logbook/1234/logs', $request->getUrl());
+
+        $this->assertTrue($request->sendLog($entry));
     }
 }

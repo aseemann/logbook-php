@@ -3,7 +3,10 @@
 namespace AxelKummer\LogBook\Tests;
 
 use AxelKummer\LogBook\Logger;
+use AxelKummer\LogBook\LoggerUtility;
+use AxelKummer\LogBook\Model\LogEntry;
 use AxelKummer\LogBook\Request\AbstractRequest;
+use AxelKummer\LogBook\Request\HttpRequest;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LogLevel;
 
@@ -18,6 +21,11 @@ use Psr\Log\LogLevel;
  */
 class LoggerTest extends TestCase
 {
+    /**
+     * Test that a logger calls the log method
+     *
+     * @return void
+     */
     public function testLogger()
     {
         $testMessage = "Test log message";
@@ -75,5 +83,58 @@ class LoggerTest extends TestCase
         $logger->notice($testMessage);
         $logger->info($testMessage);
         $logger->debug($testMessage);
+    }
+
+    /**
+     * Test that log calls sendLog of the request object
+     *
+     * @return void
+     */
+    public function testLog()
+    {
+        /**
+         * @var AbstractRequest|\PHPUnit_Framework_MockObject_MockObject $request
+         */
+        $request = $this->getMockBuilder(HttpRequest::class)
+            ->setConstructorArgs(['test', 'localhost', 9999])
+            ->setMethods(['sendLog'])
+            ->getMock();
+
+        $logger = LoggerUtility::getLogger('testSendLogs', $request);
+
+        $logEntry1 = new LogEntry(
+            'testSendLogs',
+            LogLevel::INFO,
+            'test log'
+        );
+
+        $request->expects($this->at(0))
+            ->method('sendLog')
+            ->with($logEntry1);
+
+        $logEntry2 = new LogEntry(
+            'testSendLogs',
+            LogLevel::ERROR,
+            'test log 2'
+        );
+
+        $request->expects($this->at(1))
+                ->method('sendLog')
+                ->with($logEntry2);
+
+        $logEntry3 = new LogEntry(
+            'testSendLogs',
+            LogLevel::WARNING,
+            'test log 3'
+        );
+
+        $request->expects($this->at(2))
+                ->method('sendLog')
+                ->with($logEntry3);
+
+
+        $logger->info('test log');
+        $logger->error('test log 2');
+        $logger->warning('test log 3');
     }
 }
