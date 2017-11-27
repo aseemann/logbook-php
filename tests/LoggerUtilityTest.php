@@ -29,8 +29,8 @@ class LoggerUtilityTest extends TestCase
      */
     public function testMakeRequestInstance()
     {
-        $request = LoggerUtility::makeRequestInstance(HttpRequest::class, "Test", "localhost");
-        $request2 = LoggerUtility::makeRequestInstance(HttpRequest::class, "Test", "localhost");
+        $request = LoggerUtility::setupRequest(HttpRequest::class, "Test", "localhost");
+        $request2 = LoggerUtility::setupRequest(HttpRequest::class, "Test", "localhost");
 
         $this->assertSame($request, $request2);
     }
@@ -41,31 +41,29 @@ class LoggerUtilityTest extends TestCase
      * @expectedException Exception
      * @expectedExceptionMessage The request object have to extend : AxelKummer\LogBook\Request\AbstractRequest
      *
+     * @runInSeparateProcess
+     *
      * @return void
      */
     public function testMakeRequestInstanceFails()
     {
-       $request = LoggerUtility::makeRequestInstance(Request::class, "Test", "localhost");
-       var_dump($request);
+       LoggerUtility::setupRequest(Request::class, "Test", "localhost");
     }
 
     /**
      * test getting a logger instance.
      *
+     * @runInSeparateProcess
+     *
      * @return void
      */
     public function testGetLogger()
     {
-        /**
-         * @var AbstractRequest|\PHPUnit_Framework_MockObject_MockObject $request
-         */
-        $request = $this->getMockForAbstractClass(
-            AbstractRequest::class, ['TestApp', 'localhost']
-        );
+        LoggerUtility::setupRequest(HttpRequest::class, "Test", "localhost");
 
-        $logger1 = LoggerUtility::getLogger('Test', $request);
-        $logger2 = LoggerUtility::getLogger('Test', $request);
-        $logger3 = LoggerUtility::getLogger('Test3', $request);
+        $logger1 = LoggerUtility::getLogger('Test');
+        $logger2 = LoggerUtility::getLogger('Test');
+        $logger3 = LoggerUtility::getLogger('Test3');
 
         $this->assertSame($logger1, $logger2);
         $this->assertNotSame($logger2, $logger3);

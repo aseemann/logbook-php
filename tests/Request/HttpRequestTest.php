@@ -23,11 +23,13 @@ class HttpRequestTest extends TestCase
     /**
      * Test send http request
      *
+     * @runInSeparateProcess
+     *
      * @return void
      */
     public function testSendLog()
     {
-        $request = LoggerUtility::makeRequestInstance(HttpRequest::class, "Test", 'localhost', 9999);
+        $request = LoggerUtility::setupRequest(HttpRequest::class, "Test", 'localhost', 9999);
 
         $entry = new LogEntry('TestLogger',LogLevel::INFO,'Test log entry',['array' => 1]);
 

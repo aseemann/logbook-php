@@ -2,6 +2,7 @@
 
 namespace AxelKummer\LogBook\Tests;
 
+use AxelKummer\LogBook\Exception;
 use AxelKummer\LogBook\Logger;
 use AxelKummer\LogBook\LoggerUtility;
 use AxelKummer\LogBook\Model\LogEntry;
@@ -100,7 +101,9 @@ class LoggerTest extends TestCase
             ->setMethods(['sendLog'])
             ->getMock();
 
-        $logger = LoggerUtility::getLogger('testSendLogs', $request);
+        $logger = LoggerUtility::getLogger('testSendLogs');
+
+        $logger->setRequest($request);
 
         $logEntry1 = new LogEntry(
             'testSendLogs',
@@ -136,5 +139,21 @@ class LoggerTest extends TestCase
         $logger->info('test log');
         $logger->error('test log 2');
         $logger->warning('test log 3');
+    }
+
+
+    /**
+     * Test invalid logger config
+     *
+     * @expectedException Exception
+     * @expectedExceptionMessage Please configure a request object by use the __construct() or setRequest() methods
+     *
+     * @return void
+     */
+    public function testInvalidLogger()
+    {
+        $logger = new Logger('Test', null);
+
+        $logger->info('test');
     }
 }

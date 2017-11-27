@@ -15,13 +15,12 @@ use AxelKummer\LogBook\Request\AbstractRequest;
  */
 class LoggerUtility
 {
-
     /**
      * Array with request objects
      *
-     * @var AbstractRequest[]
+     * @var AbstractRequest
      */
-    private static $requestInstances = [];
+    private static $request;
 
     /**
      * Array with logger instances
@@ -39,41 +38,39 @@ class LoggerUtility
      * @return AbstractRequest
      * @throws Exception
      */
-    public static function makeRequestInstance($className, $appIdentifier, $host, $port = null)
+    public static function setupRequest($className, $appIdentifier, $host, $port = null)
     {
-        $hash = md5($className.$appIdentifier.$host.$port);
 
-        if (array_key_exists($hash, self::$requestInstances)) {
-            return self::$requestInstances[$hash];
+        if (self::$request instanceof AbstractRequest) {
+            return self::$request;
         }
 
-        self::$requestInstances[$hash] = new $className($appIdentifier, $host, $port);
+        self::$request = new $className($appIdentifier, $host, $port);
 
-        if (false === self::$requestInstances[$hash] instanceof AbstractRequest) {
-            unset(self::$requestInstances[$hash]);
+        if (false === self::$request instanceof AbstractRequest) {
+            self::$request = null;
             throw new Exception(
                 'The request object have to extend : ' . AbstractRequest::class
             );
         }
 
-        return self::$requestInstances[$hash];
+        return self::$request;
     }
 
     /**
      * Returns a logger instance
      *
-     * @param                 $name
-     * @param AbstractRequest $request
+     * @param string $name
      *
      * @return Logger
      */
-    public static function getLogger($name, AbstractRequest $request)
+    public static function getLogger($name)
     {
         if (array_key_exists($name, self::$logger)) {
             return self::$logger[$name];
         }
 
-        self::$logger[$name] = new Logger($name, $request);
+        self::$logger[$name] = new Logger($name, self::$request);
         return self::$logger[$name];
     }
 
