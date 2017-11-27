@@ -9,7 +9,7 @@ You can install the php component of logbook via git or composer. For both you n
 get the dependencies installed which are necessary.
 
 ### From github 
-```bash
+```:bash
     ## Cloning git repo
     git clone https://github.com/axel-kummer/logbook-php.git /path/to/checkout
     ## cd in to path
@@ -19,24 +19,30 @@ get the dependencies installed which are necessary.
 ```
 
 ### From pakageist
-```bash
+```:bash
     composer require axel-kummer/logbook-php
 ```
 ## Usage
 
-Basic usage as follow.
+Basic usage.
 
-```php
+First you have to setup the request instance which is used to send the logs.
+
+```:php
 //Make a request insatnce
-$request = \AxelKummer\LogBook\LoggerUtility::makeRequestInsatnce(
+$request = \AxelKummer\LogBook\LoggerUtility::setupRequest(
     \AxelKummer\LogBook\Request\HttpRequest::class,
     'MyApplication',
     'myhost'
     8080
 );
+```
 
-//get a logger with assigned request instance
-$logger = \AxelKummer\LogBook\LoggerUtility::getLogger('MyLogger', $request);
+If it's done you can simply create logger which will have injected the request object.
+
+```:php
+//get a logger with injected request instance
+$logger = \AxelKummer\LogBook\LoggerUtility::getLogger('MyLogger');
 
 //Use the logger to send messages to the logbook server
 $logger->info('My info mesage');
