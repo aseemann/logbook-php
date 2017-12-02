@@ -18,7 +18,7 @@ abstract class AbstractRequest
     /**
      * Name of logbook session cookie
      */
-    const COOKIE_NAME = 'LOGBOOK';
+    const COOKIE_NAME = 'logbook';
 
     /**
      * @var string $appIdentifier
