@@ -40,7 +40,7 @@ class HttpRequestTest extends TestCase
 
         $_SERVER['REQUEST_URI'] = "test.html";
 
-        $this->assertSame('http://localhost:9999/logbook/1234/logs', $request->getUrl());
+        $this->assertSame('http://localhost:9999/logbook/api/1234/logs', $request->getUrl());
 
         $this->assertTrue($request->sendLog($entry));
     }

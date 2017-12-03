@@ -86,7 +86,7 @@ class HttpRequest
             return "";
         }
 
-        return "http://$this->host" . ($this->port ? ":$this->port" : "") . '/logbook/' . $this->getLogBookId()
+        return "http://$this->host" . ($this->port ? ":$this->port" : "") . '/logbook/api/' . $this->getLogBookId()
                . '/logs';
     }
 }
