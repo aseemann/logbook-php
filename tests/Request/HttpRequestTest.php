@@ -2,6 +2,7 @@
 
 namespace AxelKummer\LogBook\Tests\Request;
 
+use AxelKummer\LogBook\Exception;
 use AxelKummer\LogBook\LoggerUtility;
 use AxelKummer\LogBook\Model\LogEntry;
 use AxelKummer\LogBook\Request\AbstractRequest;
@@ -25,6 +26,8 @@ class HttpRequestTest extends TestCase
      *
      * @runInSeparateProcess
      *
+     * @throws Exception
+     *
      * @return void
      */
     public function testSendLog()
@@ -40,7 +43,7 @@ class HttpRequestTest extends TestCase
 
         $_SERVER['REQUEST_URI'] = "test.html";
 
-        $this->assertSame('http://localhost:9999/logbook/api/1234/logs', $request->getUrl());
+        $this->assertSame('http://localhost:9999'.HttpRequest::API_ROOT_PATH.'1234/logs', $request->getUrl());
 
         $this->assertTrue($request->sendLog($entry));
     }

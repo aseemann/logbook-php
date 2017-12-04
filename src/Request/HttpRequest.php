@@ -27,6 +27,11 @@ class HttpRequest
     const HEADER_REQUEST_URI    = self::HEADER_PREFIX . "Request-Uri";
 
     /**
+     * @var string api root path
+     */
+    const API_ROOT_PATH         = "/api/v1/logbooks/";
+
+    /**
      * Send a given logentry to the
      *
      * @param LogEntry $logEntry
@@ -76,6 +81,16 @@ class HttpRequest
     }
 
     /**
+     * Returns the api root path
+     *
+     * @return string
+     */
+    private function getApiRootPath()
+    {
+        return self::API_ROOT_PATH;
+    }
+
+    /**
      * Returns the request url
      *
      * @return string
@@ -86,7 +101,9 @@ class HttpRequest
             return "";
         }
 
-        return "http://$this->host" . ($this->port ? ":$this->port" : "") . '/logbook/api/' . $this->getLogBookId()
+        return "http://$this->host" . ($this->port ? ":$this->port" : "")
+               . $this->getApiRootPath()
+               . $this->getLogBookId()
                . '/logs';
     }
 }

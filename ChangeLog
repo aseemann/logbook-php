@@ -1,3 +1,8 @@
+2017-12-04      Axel Kummer <kummeraxel@gmail.com>
+
+    * Additional path fix to meet the api specs
+    * prepare make the api root path configurable
+
 2017-12-03      Axel Kummer <kummeraxel@gmail.com>
 
     * Version: 0.0.2
