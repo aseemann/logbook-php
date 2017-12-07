@@ -84,7 +84,7 @@ class LogEntryTest extends TestCase
         $this->assertSame(LogLevel::NOTICE, $logEntry->getSeverity());
         $this->assertSame("LogEntry Test", $logEntry->getMessage());
 
-        $strExpected = "{\"timestamp\":".time().",\"message\":\"LogEntry Test\",\"severity\":\"notice\",\"context\":{\"debug\":{\"objectType\":\"AxelKummer\\\\LogBook\\\\Request\\\\HttpRequest\",\"appIdentifier\":\"test\",\"host\":\"test\",\"port\":\"test\"}}}";
+        $strExpected = "{\"timestamp\":".time().",\"message\":\"LogEntry Test\",\"severity\":\"notice\",\"context\":{\"debug\":{\"objectType\":\"AxelKummer\\\\LogBook\\\\Request\\\\HttpRequest\",\"appIdentifier\":\"test\",\"host\":\"test\",\"port\":\"test\",\"requestId\":null}}}";
         $strCurrent  = (string) $logEntry;
 
         $this->assertSame($strExpected, $strCurrent);

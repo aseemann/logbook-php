@@ -36,6 +36,11 @@ abstract class AbstractRequest
     protected $port;
 
     /**
+     * @var string request identifier
+     */
+    protected $requestId;
+
+    /**
      * AbstractRequest constructor.
      *
      * @param string $appIdentifier AppIdentifier
@@ -67,6 +72,26 @@ abstract class AbstractRequest
     protected function getLogBookId()
     {
         return (string) $_COOKIE[self::COOKIE_NAME];
+    }
+
+    /**
+     * @return string
+     */
+    public function getRequestId()
+    {
+        return $this->requestId;
+    }
+
+    /**
+     * @param string $requestId
+     *
+     * @return AbstractRequest
+     */
+    public function setRequestId($requestId)
+    {
+        $this->requestId = $requestId;
+
+        return $this;
     }
 
     /**

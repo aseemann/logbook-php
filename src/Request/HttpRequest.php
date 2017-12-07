@@ -25,6 +25,7 @@ class HttpRequest
     const HEADER_LOGGER_NAME    = self::HEADER_PREFIX . "Logger-Name";
     const HEADER_APP_IDENTIFIER = self::HEADER_PREFIX . "App-Identifier";
     const HEADER_REQUEST_URI    = self::HEADER_PREFIX . "Request-Uri";
+    const HEADER_REQUEST_ID     = self::HEADER_PREFIX . "Request-Id";
 
     /**
      * @var string api root path
@@ -77,6 +78,7 @@ class HttpRequest
             self::HEADER_LOGGER_NAME    => $logEntry->getLoggerName(),
             self::HEADER_REQUEST_URI    => filter_var($_SERVER['REQUEST_URI'], FILTER_SANITIZE_URL),
             self::HEADER_APP_IDENTIFIER => $this->appIdentifier,
+            self::HEADER_REQUEST_ID     => $this->getRequestId(),
         ];
     }
 

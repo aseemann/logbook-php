@@ -30,6 +30,11 @@ class LoggerUtility
     private static $logger = [];
 
     /**
+     * @var string $requestId
+     */
+    private static $requestId;
+
+    /**
      * @param string  $className
      * @param string  $appIdentifier
      * @param string  $host
@@ -46,7 +51,6 @@ class LoggerUtility
         }
 
         self::$request = new $className($appIdentifier, $host, $port);
-
         if (false === self::$request instanceof AbstractRequest) {
             self::$request = null;
             throw new Exception(
@@ -54,7 +58,23 @@ class LoggerUtility
             );
         }
 
+        self::$request->setRequestId(self::getRequestId());
+
         return self::$request;
+    }
+
+    /**
+     * Returns a unique request identifier
+     *
+     * @return string
+     */
+    public static function getRequestId()
+    {
+        if (empty(static::$requestId)) {
+            static::$requestId = uniqid('', true);
+        }
+
+        return static::$requestId;
     }
 
     /**
