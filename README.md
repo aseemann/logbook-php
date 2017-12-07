@@ -38,6 +38,12 @@ $request = \AxelKummer\LogBook\LoggerUtility::setupRequest(
 );
 ```
 
+You can also add a unique request identifier for all logs within a request. 
+```:php
+$request->setRequestId(\AxelKummer\LogBook\LoggerUtility::getRequestId('Prefix))
+```
+
+
 If it's done you can simply create logger which will have injected the request object.
 
 ```:php

@@ -66,12 +66,14 @@ class LoggerUtility
     /**
      * Returns a unique request identifier
      *
+     * @param string $prefix Identifier prefix
+     *
      * @return string
      */
-    public static function getRequestId()
+    public static function getRequestId($prefix = '')
     {
         if (empty(static::$requestId)) {
-            static::$requestId = uniqid('', true);
+            static::$requestId = uniqid($prefix, true);
         }
 
         return static::$requestId;
