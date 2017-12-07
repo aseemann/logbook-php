@@ -173,7 +173,7 @@ class LogEntry
     public function __toString()
     {
         $logEntry = [];
-        $logEntry['timestamp'] = $this->getTime();
+        $logEntry['time'] = $this->getTime();
         $logEntry['message'] = $this->getMessage();
         $logEntry['severity'] = $this->getSeverity();
         $logEntry['context'] = $this->getContext();

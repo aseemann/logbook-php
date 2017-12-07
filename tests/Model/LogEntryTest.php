@@ -37,7 +37,7 @@ class LogEntryTest extends TestCase
         $this->assertSame("LogEntry Test", $logEntry->getMessage());
         $this->assertSame($context, $logEntry->getContext());
 
-        $strExpected = "{\"timestamp\":".time().",\"message\":\"LogEntry Test\",\"severity\":\"notice\",\"context\":{\"debug\":{\"test\":1,\"test2\":2}}}";
+        $strExpected = "{\"time\":".time().",\"message\":\"LogEntry Test\",\"severity\":\"notice\",\"context\":{\"debug\":{\"test\":1,\"test2\":2}}}";
         $strCurrent  = (string) $logEntry;
 
         $this->assertSame($strExpected, $strCurrent);
@@ -65,7 +65,7 @@ class LogEntryTest extends TestCase
         $this->assertSame(LogLevel::NOTICE, $logEntry->getSeverity());
         $this->assertSame("LogEntry Test", $logEntry->getMessage());
 
-        $strExpected = "{\"timestamp\":".time().",\"message\":\"LogEntry Test\",\"severity\":\"notice\",\"context\":{\"debug\":{\"objectType\":\"stdClass\",\"test\":1,\"test2\":2}}}";
+        $strExpected = "{\"time\":".time().",\"message\":\"LogEntry Test\",\"severity\":\"notice\",\"context\":{\"debug\":{\"objectType\":\"stdClass\",\"test\":1,\"test2\":2}}}";
         $strCurrent  = (string) $logEntry;
 
         $this->assertSame($strExpected, $strCurrent);
@@ -84,7 +84,7 @@ class LogEntryTest extends TestCase
         $this->assertSame(LogLevel::NOTICE, $logEntry->getSeverity());
         $this->assertSame("LogEntry Test", $logEntry->getMessage());
 
-        $strExpected = "{\"timestamp\":".time().",\"message\":\"LogEntry Test\",\"severity\":\"notice\",\"context\":{\"debug\":{\"objectType\":\"AxelKummer\\\\LogBook\\\\Request\\\\HttpRequest\",\"appIdentifier\":\"test\",\"host\":\"test\",\"port\":\"test\",\"requestId\":null}}}";
+        $strExpected = "{\"time\":".time().",\"message\":\"LogEntry Test\",\"severity\":\"notice\",\"context\":{\"debug\":{\"objectType\":\"AxelKummer\\\\LogBook\\\\Request\\\\HttpRequest\",\"appIdentifier\":\"test\",\"host\":\"test\",\"port\":\"test\",\"requestId\":null}}}";
         $strCurrent  = (string) $logEntry;
 
         $this->assertSame($strExpected, $strCurrent);
