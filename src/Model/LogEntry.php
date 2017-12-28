@@ -174,11 +174,40 @@ class LogEntry
     {
         $logEntry = [];
         $logEntry['time'] = $this->getTime();
-        $logEntry['message'] = $this->getMessage();
+        $logEntry['message'] = $this->interpolate($this->getMessage(), $this->getContext());
         $logEntry['severity'] = $this->getSeverity();
         $logEntry['context'] = $this->getContext();
 
         return json_encode($logEntry);
+    }
+
+    /**
+     * Interpolates context values into the message placeholders.
+     *
+     * @param string $message the message with placeholders
+     * @param array  $context the context
+     *
+     * @return string
+     */
+    private function interpolate($message, array $context = array())
+    {
+        if (!array_key_exists('data', $context)) {
+            return $message;
+        }
+
+        // build a replacement array with braces around the context keys
+        $replace = array();
+        foreach ($context['data'] as $key => $val) {
+            // check that the value can be casted to string
+            if (!is_array($val) && (!is_object($val) || method_exists($val, '__toString'))) {
+                // check if the key already contains the braces
+                $key = substr($key, 0, 1) === '{' ? $key : '{' . $key . '}';
+                $replace[$key] = $val;
+            }
+        }
+
+        // interpolate replacement values into the message and return
+        return strtr($message, $replace);
     }
 
     /**
