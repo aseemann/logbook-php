@@ -73,7 +73,7 @@ class LoggerUtility
     public static function getRequestId($prefix = '')
     {
         if (empty(static::$requestId)) {
-            static::$requestId = uniqid($prefix, true);
+            static::$requestId = md5(uniqid($prefix . rand(), true));
         }
 
         return static::$requestId;
