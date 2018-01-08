@@ -7,6 +7,15 @@ use AxelKummer\LogBook\Request\HttpRequest;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LogLevel;
 
+class dummyMock
+{
+    public function __toString(): string
+    {
+        throw new \Exception("asd");
+        return "asd";
+    }
+}
+
 /**
  * Test for the logBook entry
  *
@@ -41,6 +50,58 @@ class LogEntryTest extends TestCase
         $strCurrent  = (string) $logEntry;
 
         $this->assertSame($strExpected, $strCurrent);
+    }
+
+    /**
+     * We want our logger to work in edge cases, e.g. when the context
+     * cannot be rendered into valid JSON.
+     *
+     * @dataProvider erroneousLogEntryProvider
+     *
+     * @return void
+     */
+    public function testLoggerCatchesContextErrors(LogEntry $logEntry, string $partOfContent)
+    {
+        $this->assertContains($partOfContent, (string) $logEntry);
+        $this->assertContains("PHP LogBook Error", (string) $logEntry);
+    }
+
+    /**
+     * Provide test-data for edge cases
+     *
+     * @return array
+     */
+    public function erroneousLogEntryProvider()
+    {
+        return [
+            [
+                new LogEntry(
+                    __CLASS__,
+                    LogLevel::ERROR,
+                    $message = "Error in context test",
+                    ['data' => "\xB1\x31"]
+                ),
+                $message
+            ],
+            [
+                new LogEntry(
+                    __CLASS__,
+                    "\xB1\x31",
+                    $message = "Error in context test",
+                    ['data' => "Test-data"]
+                ),
+                $message
+            ],
+            [
+                new LogEntry(
+                    __CLASS__,
+                    LogLevel::ERROR,
+                    $message = "\xB1\x31",
+                    ['data' => "Test-data"]
+                ),
+                "Error: Malformed UTF-8 characters, possibly incorrectly encoded"
+            ],
+        ];
     }
 
     /**

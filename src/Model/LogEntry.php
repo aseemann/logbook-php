@@ -13,6 +13,13 @@ namespace AxelKummer\LogBook\Model;
 class LogEntry
 {
     /**
+     * Prefix for error messages sent by this Logger
+     *
+     * @var string
+     */
+    const ERROR_PREFIX = "PHP LogBook Error";
+
+    /**
      * Name of logger
      *
      * @var string
@@ -174,9 +181,10 @@ class LogEntry
     {
         $logEntry = [];
         $logEntry['time'] = $this->getTime();
-        $logEntry['message'] = $this->interpolate($this->getMessage(), $this->getContext());
-        $logEntry['severity'] = $this->getSeverity();
-        $logEntry['context'] = $this->getContext();
+        $message = $this->interpolate($this->getMessage(), $this->getContext());
+        $logEntry['message'] = json_encode($message) ? $message : self::ERROR_PREFIX . ": " . json_last_error_msg();
+        $logEntry['severity'] = json_encode($this->getSeverity()) ? $this->getSeverity() : self::ERROR_PREFIX;
+        $logEntry['context'] = json_encode($this->getContext()) ? $this->getContext() : [self::ERROR_PREFIX => json_last_error_msg()];
 
         return json_encode($logEntry);
     }
@@ -191,7 +199,9 @@ class LogEntry
      */
     private function interpolate($message, array $context = array())
     {
-        if (!array_key_exists('data', $context)) {
+        if (!array_key_exists('data', $context)
+            || !is_array($context['data'])
+        ) {
             return $message;
         }
 
@@ -199,7 +209,7 @@ class LogEntry
         $replace = array();
         foreach ($context['data'] as $key => $val) {
             // check that the value can be casted to string
-            if (!is_array($val) && (!is_object($val) || method_exists($val, '__toString'))) {
+            if (!is_string($val) || (is_object($val) && method_exists($val, '__toString'))) {
                 // check if the key already contains the braces
                 $key = substr($key, 0, 1) === '{' ? $key : '{' . $key . '}';
                 $replace[$key] = $val;
