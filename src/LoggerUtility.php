@@ -3,6 +3,8 @@
 namespace AxelKummer\LogBook;
 
 use AxelKummer\LogBook\Request\AbstractRequest;
+use AxelKummer\LogBook\Request\HttpRequest;
+use Psr\Log\NullLogger;
 
 /**
  * Class LoggerUtility
@@ -90,6 +92,10 @@ class LoggerUtility
     {
         if (array_key_exists($name, self::$logger)) {
             return self::$logger[$name];
+        }
+
+        if (!isset($_COOKIE[HttpRequest::COOKIE_NAME])) {
+            return new NullLogger();
         }
 
         self::$logger[$name] = new Logger($name, self::$request);

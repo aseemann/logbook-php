@@ -32,6 +32,9 @@ class HttpRequestTest extends TestCase
      */
     public function testSendLog()
     {
+        if (isset($_COOKIE[AbstractRequest::COOKIE_NAME])) {
+            unset($_COOKIE[AbstractRequest::COOKIE_NAME]);
+        }
         $request = LoggerUtility::setupRequest(HttpRequest::class, "Test", 'localhost', 9999);
 
         $entry = new LogEntry('TestLogger',LogLevel::INFO,'Test log entry',['array' => 1]);

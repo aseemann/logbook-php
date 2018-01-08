@@ -3,12 +3,12 @@
 namespace AxelKummer\LogBook\Tests;
 
 use AxelKummer\LogBook\Exception;
-use AxelKummer\LogBook\Logger;
 use AxelKummer\LogBook\LoggerUtility;
 use AxelKummer\LogBook\Request\AbstractRequest;
 use AxelKummer\LogBook\Request\HttpRequest;
 use AxelKummer\LogBook\Tests\Stub\Request;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\NullLogger;
 
 /**
  * Class LoggerUtilityTest
@@ -59,6 +59,7 @@ class LoggerUtilityTest extends TestCase
      */
     public function testGetLogger()
     {
+        $_COOKIE[HttpRequest::COOKIE_NAME] = "test-logbook-identifier";
         LoggerUtility::setupRequest(HttpRequest::class, "Test", "localhost");
 
         $logger1 = LoggerUtility::getLogger('Test');
@@ -67,5 +68,26 @@ class LoggerUtilityTest extends TestCase
 
         $this->assertSame($logger1, $logger2);
         $this->assertNotSame($logger2, $logger3);
+    }
+
+    /**
+     * If there is no cookie, then we don't need to process any data. Rather
+     * we should do nothing with it.
+     *
+     * @runInSeparateProcess
+     *
+     * @return void
+     */
+    public function testGetLoggerReturnsNullLoggerIfNoCookieSet()
+    {
+        if (isset($_COOKIE[AbstractRequest::COOKIE_NAME])) {
+            unset($_COOKIE[AbstractRequest::COOKIE_NAME]);
+        }
+
+        LoggerUtility::setupRequest(HttpRequest::class, "Test", "localhost");
+
+        $logger1 = LoggerUtility::getLogger('Test');
+
+        $this->assertInstanceOf(NullLogger::class, $logger1);
     }
 }

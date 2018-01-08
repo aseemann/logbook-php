@@ -93,6 +93,7 @@ class LoggerTest extends TestCase
      */
     public function testLog()
     {
+        $_COOKIE[AbstractRequest::COOKIE_NAME] = "test-logbook-identifier";
         /**
          * @var AbstractRequest|\PHPUnit_Framework_MockObject_MockObject $request
          */
