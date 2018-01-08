@@ -65,6 +65,23 @@ class HttpRequest
     }
 
     /**
+     * Returns the request url
+     *
+     * @return string
+     */
+    public function getUrl()
+    {
+        if (false === $this->hasCookie()) {
+            return "";
+        }
+
+        return "http://$this->host" . ($this->port ? ":$this->port" : "")
+            . $this->getApiRootPath()
+            . $this->getLogBookId()
+            . '/logs';
+    }
+
+    /**
      * Returns the array with request headers
      *
      * @param LogEntry $logEntry
@@ -90,22 +107,5 @@ class HttpRequest
     private function getApiRootPath()
     {
         return self::API_ROOT_PATH;
-    }
-
-    /**
-     * Returns the request url
-     *
-     * @return string
-     */
-    public function getUrl()
-    {
-        if (false === $this->hasCookie()) {
-            return "";
-        }
-
-        return "http://$this->host" . ($this->port ? ":$this->port" : "")
-               . $this->getApiRootPath()
-               . $this->getLogBookId()
-               . '/logs';
     }
 }

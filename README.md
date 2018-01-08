@@ -29,7 +29,7 @@ Basic usage.
 First you have to setup the request instance which is used to send the logs.
 
 ```:php
-//Make a request insatnce
+//Make a request instance
 $request = \AxelKummer\LogBook\LoggerUtility::setupRequest(
     \AxelKummer\LogBook\Request\HttpRequest::class,
     'MyApplication',
@@ -54,7 +54,7 @@ $logger = \AxelKummer\LogBook\LoggerUtility::getLogger('MyLogger');
 $logger->info('My info mesage');
 ```
 
-You can implement an use your own request class. Your Class have to extend ``\AxelKummer\LogBook\Request\AbstractRequest``
+You can implement and use your own request class. Your Class have to extend ``\AxelKummer\LogBook\Request\AbstractRequest``
 and implements the methods ``sendLog`` and ``getUrl``
 
 

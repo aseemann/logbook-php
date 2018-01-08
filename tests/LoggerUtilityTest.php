@@ -39,7 +39,7 @@ class LoggerUtilityTest extends TestCase
      * Test makeRequestInstance Throws exception if the instance does not extend the abstract request.
      *
      * @expectedException Exception
-     * @expectedExceptionMessage The request object have to extend : AxelKummer\LogBook\Request\AbstractRequest
+     * @expectedExceptionMessage The request object must extend AxelKummer\LogBook\Request\AbstractRequest
      *
      * @runInSeparateProcess
      *

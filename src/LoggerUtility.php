@@ -56,7 +56,7 @@ class LoggerUtility
         if (false === self::$request instanceof AbstractRequest) {
             self::$request = null;
             throw new Exception(
-                'The request object have to extend : ' . AbstractRequest::class
+                'The request object must extend ' . AbstractRequest::class
             );
         }
 
