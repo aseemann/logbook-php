@@ -10,6 +10,7 @@ namespace AxelKummer\LogBook\Tests;
 
 
 use AxelKummer\LogBook\LogBook;
+use AxelKummer\LogBook\LogBookInterface;
 use AxelKummer\LogBook\Request\AbstractRequest;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
@@ -21,7 +22,7 @@ class LogBookTest extends TestCase
     {
         $logBook = LogBook::newLogBook();
 
-        $this->assertInstanceOf(LogBook::class, $logBook);
+        $this->assertInstanceOf(LogBookInterface::class, $logBook);
     }
 
     public function testGetLoggerReturnsLogger()

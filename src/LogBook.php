@@ -16,7 +16,7 @@ use Psr\Log\NullLogger;
  * @license  https://www.gnu.org/licenses/gpl-3.0.en.html GPLv3
  * @link     https://github.com/axel-kummer/logbook-php
  */
-class LogBook
+class LogBook implements LogBookInterface
 {
     /**
      * @var AbstractRequest
@@ -45,17 +45,21 @@ class LogBook
      * @param string $host
      * @param int    $port
      *
-     * @return LogBook
+     * @return LogBookInterface
      */
     final public static function newLogBook($appIdentifier = '', $host = 'localhost', $port = null)
     {
-        return new LogBook(
-            new HttpRequest(
-                $appIdentifier,
-                $host,
-                $port
-            )
-        );
+        if (isset($_COOKIE[AbstractRequest::COOKIE_NAME])) {
+            return new LogBook(
+                new HttpRequest(
+                    $appIdentifier,
+                    $host,
+                    $port
+                )
+            );
+        }
+
+        return new NullLogBook();
     }
 
     /**
