@@ -4,6 +4,7 @@ namespace AxelKummer\LogBook;
 
 use AxelKummer\LogBook\Request\AbstractRequest;
 use AxelKummer\LogBook\Request\HttpRequest;
+use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 
 /**
@@ -27,9 +28,9 @@ class LoggerUtility
     /**
      * Array with logger instances
      *
-     * @var Logger[]
+     * @var LogBook
      */
-    private static $logger = [];
+    private static $logBook;
 
     /**
      * @var string $requestId
@@ -61,6 +62,7 @@ class LoggerUtility
         }
 
         self::$request->setRequestId(self::getRequestId());
+        self::$logBook = LogBook::buildLogBookFromRequest(self::$request);
 
         return self::$request;
     }
@@ -86,20 +88,11 @@ class LoggerUtility
      *
      * @param string $name
      *
-     * @return Logger
+     * @return LoggerInterface
      */
     public static function getLogger($name)
     {
-        if (array_key_exists($name, self::$logger)) {
-            return self::$logger[$name];
-        }
-
-        if (!isset($_COOKIE[HttpRequest::COOKIE_NAME])) {
-            return new NullLogger();
-        }
-
-        self::$logger[$name] = new Logger($name, self::$request);
-        return self::$logger[$name];
+        return self::$logBook->getLogger($name);
     }
 
 }

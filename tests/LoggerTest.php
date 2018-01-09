@@ -3,6 +3,7 @@
 namespace AxelKummer\LogBook\Tests;
 
 use AxelKummer\LogBook\Exception;
+use AxelKummer\LogBook\LogBook;
 use AxelKummer\LogBook\Logger;
 use AxelKummer\LogBook\LoggerUtility;
 use AxelKummer\LogBook\Model\LogEntry;
@@ -102,9 +103,8 @@ class LoggerTest extends TestCase
             ->setMethods(['sendLog'])
             ->getMock();
 
-        $logger = LoggerUtility::getLogger('testSendLogs');
-
-        $logger->setRequest($request);
+        $logBook = LogBook::buildLogBookFromRequest($request);
+        $logger = $logBook->getLogger('testSendLogs');
 
         $logEntry1 = new LogEntry(
             'testSendLogs',

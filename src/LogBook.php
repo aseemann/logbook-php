@@ -58,6 +58,18 @@ class LogBook
         );
     }
 
+    /**
+     * Build a LogBook based on a request object
+     *
+     * @param AbstractRequest $request given request object
+     *
+     * @return LogBook
+     */
+    final public static function buildLogBookFromRequest(AbstractRequest $request)
+    {
+        return new LogBook($request);
+    }
+
     /***
      * Get a logger
      *
