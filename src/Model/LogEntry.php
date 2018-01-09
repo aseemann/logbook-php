@@ -208,11 +208,27 @@ class LogEntry
         // build a replacement array with braces around the context keys
         $replace = array();
         foreach ($context['data'] as $key => $val) {
+            // check if the key already contains the braces
+            $key = substr($key, 0, 1) === '{' ? $key : '{' . $key . '}';
             // check that the value can be casted to string
-            if (!is_string($val) || (is_object($val) && method_exists($val, '__toString'))) {
-                // check if the key already contains the braces
-                $key = substr($key, 0, 1) === '{' ? $key : '{' . $key . '}';
+            if (is_string($val) || is_integer($val) || is_float($val) || (is_object($val) && method_exists($val, '__toString'))) {
                 $replace[$key] = $val;
+                continue;
+            }
+
+            if (null === $val) {
+                $replace[$key] = 'NULL';
+                continue;
+            }
+
+            if (is_bool($val)) {
+                $replace[$key] = $val ? 'TRUE' : 'FALSE';
+                continue;
+            }
+
+            if (is_callable($val)) {
+                $replace[$key] = 'CALLABLE';
+                continue;
             }
         }
 

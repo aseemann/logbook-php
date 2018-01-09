@@ -150,4 +150,78 @@ class LogEntryTest extends TestCase
 
         $this->assertSame($strExpected, $strCurrent);
     }
+
+    /**
+     * Test that interpolation works
+     *
+     * @param string $message
+     * @param array $context
+     * @param string $expectedResult
+     *
+     * @dataProvider provideMessagesAndContextForInterpolation
+     *
+     * @return void
+     */
+    public function testInterpolationOfContext(string $message, array $context, string $expectedResult)
+    {
+        $logEntry = new LogEntry(
+            __CLASS__,
+            LogLevel::DEBUG,
+            $message,
+            $context
+        );
+
+        $this->assertContains($expectedResult, (string) $logEntry);
+    }
+
+    public function provideMessagesAndContextForInterpolation()
+    {
+        return [
+            [
+                "Variable: {var}",
+                ['data' => ['var' => 'test']],
+                "Variable: test",
+            ],
+            [
+                "Variable: {var}",
+                ['data' => ['{var}' => 'test']],
+                "Variable: test",
+            ],
+            [
+                "Variable: <{var}>",
+                ['data' => ['{var}' => 'test']],
+                "Variable: <test>",
+            ],
+            [
+                "Variable: {var}",
+                ['data' => ['var' => 123]],
+                "Variable: 123",
+            ],
+            [
+                "Variable: {var}",
+                ['data' => ['var' => 0.123]],
+                "Variable: 0.123",
+            ],
+            [
+                "Variable: {var}",
+                ['data' => ['var' => null]],
+                "Variable: NULL",
+            ],
+            [
+                "Variable: {var}",
+                ['data' => ['var' => true]],
+                "Variable: TRUE",
+            ],
+            [
+                "Variable: {var}",
+                ['data' => ['var' => false]],
+                "Variable: FALSE",
+            ],
+            [
+                "Variable: {var}",
+                ['data' => ['var' => function() { return; }]],
+                "Variable: CALLABLE",
+            ],
+        ];
+    }
 }
