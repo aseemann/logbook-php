@@ -1,6 +1,8 @@
 <?php
 namespace AxelKummer\LogBook\Model;
 
+use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
+
 /**
  * LogBook PHP. Model of an logentry which should be sent to the LogBookServer
  *
@@ -183,6 +185,7 @@ class LogEntry
         $logEntry['time'] = $this->getTime();
         $message = $this->interpolate($this->getMessage(), $this->getContext());
         $logEntry['message'] = json_encode($message) ? $message : self::ERROR_PREFIX . ": " . json_last_error_msg();
+        $logEntry['message'] = htmlentities($logEntry['message']);
         $logEntry['severity'] = json_encode($this->getSeverity()) ? $this->getSeverity() : self::ERROR_PREFIX;
         $logEntry['context'] = json_encode($this->getContext()) ? $this->getContext() : [self::ERROR_PREFIX => json_last_error_msg()];
 
